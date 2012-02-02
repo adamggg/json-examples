@@ -1,0 +1,5 @@
+# ignore executable
+example
+
+# ignore generated Makefile
+Makefile
