@@ -1,5 +1,5 @@
 require 'minitest/autorun'
-require File.join(File.dirname(File.expand_path(__FILE__)), '..', 'example.rb')
+require File.join(File.dirname(File.expand_path(__FILE__)), '..', 'api.rb')
 #require '../example.rb'
 
 class TestSpotterAPI < MiniTest::Unit::TestCase
