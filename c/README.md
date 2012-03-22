@@ -80,6 +80,14 @@ Once all of that initialization is done, just tell CURL to perform the GET and c
 
 That's it!
 
+#### getSettingsGzip ####
+
+This is basically the same as `getSettings`, but we include the "Allow-Encoding" header to tell the server that we will accept gzip encoding:
+
+    curl_easy_setopt(pCurl, CURLOPT_ACCEPT_ENCODING, "gzip;q=1.0");
+
+`libcurl` will handle everything else.
+
 #### handleSettings ####
 
 This is where our JSON parsing happens. It just takes the data that we CURL read in for us from the spotter.

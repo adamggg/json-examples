@@ -95,6 +95,37 @@ And then get the response as before:
         sb.append(input);
     }
 
+#### getSettingsGzip ####
+
+This sets the "Accept-Encoding" header on the http request:
+
+    req.setRequestProperty("Accept-Encoding", "gzip;q=1.0");
+
+On the response, we need to check the "Content-Encoding" header. If gzip is present, then set a boolean so we know how to interpret the response:
+
+    // get the response headers
+    Map<String, List<String>> headers = req.getHeaderFields();
+
+    for (String key : headers.keySet()) {
+        if (key != null && key.equalsIgnoreCase("Content-Encoding")) {
+            for (String val : headers.get(key)) {
+                if (val.equalsIgnoreCase("gzip")) {
+                    gzipped = true;
+                    break;
+                }
+            }
+            break;
+        }
+    }
+
+If it is encoded as gzip, then create a new `GZIPInputStream` and let it handle decompressing the response:
+
+    GZIPInputStream in = new GZIPInputStream(req.getInputStream());
+
+Read it out however you like.  GZIPInputStream is in the standard library, so it supports the common stream operations.
+
+If it is not encoded as gzip, then handle it the same way `getSettings` does.
+
 #### handleSettingsJsonLib ####
 
 Json-lib has a lot of features, but we'll only use a small subset for this example. It is one of the more popular JSON libraries, probably because it is based on the [reference implementation](http://www.json.org/java) by Douglas Crockford.

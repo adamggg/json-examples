@@ -62,7 +62,6 @@ int getSettingsGzip(char* url, char* data) {
     int res = -1;
     CURL* pCurl = curl_easy_init();
 
-    double len = 0;
     int res1;
 
     if (!pCurl) {
@@ -85,9 +84,6 @@ int getSettingsGzip(char* url, char* data) {
 
     // synchronous, but we don't really care
     res = curl_easy_perform(pCurl);
-
-    // get the content length
-    res1 = curl_easy_getinfo(pCurl, CURLINFO_SIZE_DOWNLOAD, &len);
 
     // cleanup after ourselves
     curl_easy_cleanup(pCurl);
