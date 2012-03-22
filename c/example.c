@@ -58,6 +58,43 @@ int getSettings(char* url, char* data) {
     return res;
 }
 
+int getSettingsGzip(char* url, char* data) {
+    int res = -1;
+    CURL* pCurl = curl_easy_init();
+
+    double len = 0;
+    int res1;
+
+    if (!pCurl) {
+        return 0;
+    }
+
+    // setup curl
+    curl_easy_setopt(pCurl, CURLOPT_URL, url);
+    curl_easy_setopt(pCurl, CURLOPT_WRITEFUNCTION, writeFn);
+    // we don't care about progress
+    curl_easy_setopt(pCurl, CURLOPT_NOPROGRESS, 1);
+    curl_easy_setopt(pCurl, CURLOPT_FAILONERROR, 1);
+    curl_easy_setopt(pCurl, CURLOPT_WRITEDATA, data);
+
+    // add the gzip header
+    curl_easy_setopt(pCurl, CURLOPT_ACCEPT_ENCODING, "gzip;q=1.0");
+
+    // set a 1 second timeout
+    curl_easy_setopt(pCurl, CURLOPT_TIMEOUT, 1);
+
+    // synchronous, but we don't really care
+    res = curl_easy_perform(pCurl);
+
+    // get the content length
+    res1 = curl_easy_getinfo(pCurl, CURLINFO_SIZE_DOWNLOAD, &len);
+
+    // cleanup after ourselves
+    curl_easy_cleanup(pCurl);
+
+    return res;
+}
+
 static size_t read_callback(void* ptr, size_t size, size_t nmemb, void* userdata) {
     int tLen = strlen(userdata);
 
@@ -74,6 +111,7 @@ static size_t read_callback(void* ptr, size_t size, size_t nmemb, void* userdata
 
 int postSettings(char* url, char* data) {
     int res = -1;
+    char tmp[2048];
     CURL* pCurl = curl_easy_init();
 
     // we need to set headers later
@@ -82,6 +120,9 @@ int postSettings(char* url, char* data) {
     if (!pCurl) {
         return 0;
     }
+
+    // we'll use data to store the result
+    memset(tmp, 0, 2048);
 
     // add the application/json content-type
     // so the server knows how to interpret our HTTP POST body
@@ -94,6 +135,8 @@ int postSettings(char* url, char* data) {
     curl_easy_setopt(pCurl, CURLOPT_HTTPHEADER, headers);
     curl_easy_setopt(pCurl, CURLOPT_READFUNCTION, read_callback);
     curl_easy_setopt(pCurl, CURLOPT_READDATA, data);
+    curl_easy_setopt(pCurl, CURLOPT_WRITEFUNCTION, writeFn);
+    curl_easy_setopt(pCurl, CURLOPT_WRITEDATA, tmp);
     // we don't care about progress
     curl_easy_setopt(pCurl, CURLOPT_NOPROGRESS, 1);
     curl_easy_setopt(pCurl, CURLOPT_FAILONERROR, 1);
@@ -108,6 +151,8 @@ int postSettings(char* url, char* data) {
     curl_easy_cleanup(pCurl);
     curl_slist_free_all(headers);
 
+    // copy the response to data
+    strcpy(data, tmp);
     return res;
 }
 
@@ -143,7 +188,7 @@ void handleSettings(char* data) {
         alt += 1000;
     }
 
-    printf("New altitude: %f\n", alt);
+    printf("New altitude: %f\n\n", alt);
 
     altitudeObj = json_object_new_double(alt);
     json_object_object_add(results, "altitude", altitudeObj);
@@ -186,6 +231,9 @@ int main(int argc, char** argv) {
     // get the current settings
     res = getSettings(url, data);
 
+    // output the starting settings
+    printf("Original Settings:\n%s\n\n", data);
+
     // make sense of the data received and make changes
     handleSettings(data);
 
@@ -195,6 +243,16 @@ int main(int argc, char** argv) {
 
     // set our new and improved settings
     postSettings(url, data);
+
+    printf("Result from POST:\n%s\n\n", data);
+
+    memset(data, 0, 2048);
+
+    // get the current settings, but gzipped
+    res = getSettingsGzip(url, data);
+
+    // output our new settings
+    printf("New Settings (gzipped response):\n%s\n", data);
 
     return res;
 }
