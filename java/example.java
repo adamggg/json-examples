@@ -10,6 +10,12 @@ import net.sf.json.*;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonObject;
 
+import java.util.List;
+import java.util.Map;
+
+import java.nio.ByteBuffer;
+import java.util.zip.GZIPInputStream;
+
 public class example {
     private static final String RESOURCE = "/geolocation.json";
 
@@ -29,6 +35,56 @@ public class example {
         }
 
         return sb.toString();
+    }
+
+    private static String getSettingsGzip(String url) throws Exception {
+        boolean gzipped = false;
+        URL tUrl = new URL(url + RESOURCE);
+
+        // open the connection
+        URLConnection req = tUrl.openConnection();
+        // state that we'll accept gzip encoding
+        req.setRequestProperty("Accept-Encoding", "gzip;q=1.0");
+
+        // get the response headers
+        Map<String, List<String>> headers = req.getHeaderFields();
+
+        for (String key : headers.keySet()) {
+            if (key != null && key.equalsIgnoreCase("Content-Encoding")) {
+                for (String val : headers.get(key)) {
+                    if (val.equalsIgnoreCase("gzip")) {
+                        gzipped = true;
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+
+        if (gzipped) {
+            GZIPInputStream in = new GZIPInputStream(req.getInputStream());
+
+            ByteBuffer buf = ByteBuffer.allocate(2048);
+            int b;
+            int read = 0;
+            while ((b = in.read()) != -1) {
+                read++;
+                buf.put((byte)b);
+            }
+
+            return new String(buf.array(), 0, read, "UTF-8");
+        } else {
+            // get the response
+            BufferedReader in = new BufferedReader(new InputStreamReader(req.getInputStream()));
+
+            StringBuilder sb = new StringBuilder();
+            String input;
+            while ((input = in.readLine()) != null) {
+                sb.append(input);
+            }
+
+            return sb.toString();
+        }
     }
 
     private static String setSettings(String url, String settings) throws Exception {
@@ -121,7 +177,13 @@ public class example {
 
         res = setSettings(url, res);
 
-        System.out.println("Response:");
+        System.out.println("POST Response:");
+        System.out.println(res);
+        System.out.println();
+
+        res = getSettingsGzip(url);
+
+        System.out.println("New Settings:");
         System.out.println(res);
     }
 }
