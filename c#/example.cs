@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Net;
 using System.Text;
 
@@ -31,6 +32,31 @@ namespace example {
                 sb.Append(Encoding.UTF8.GetString(buf, 0, count));
             }
 
+            return sb.ToString();
+        }
+
+        static string GetSettingsGzip(string url) {
+            // add the resource we're looking for
+            url += RESOURCE;
+
+            StringBuilder sb = new StringBuilder();
+            byte[] buf = new byte[8192];
+
+            // initialize the request
+            HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url + "?minWait=1000");
+            req.Headers.Add(HttpRequestHeader.AcceptEncoding, "gzip;q=1.0");
+
+            HttpWebResponse res = (HttpWebResponse)req.GetResponse();
+
+            Stream resStream = res.GetResponseStream();
+            if (res.ContentEncoding.Equals("gzip", StringComparison.CurrentCultureIgnoreCase)) {
+                resStream = new GZipStream(resStream, CompressionMode.Decompress);
+            }
+
+            int count = 0;
+            while ((count = resStream.Read(buf, 0, buf.Length)) > 0) {
+                sb.Append(Encoding.UTF8.GetString(buf, 0, count));
+            }
             return sb.ToString();
         }
 
@@ -115,10 +141,27 @@ namespace example {
             }
 
             string res = GetSettings(url);
+
+            Console.WriteLine("Before:");
+            Console.WriteLine(res);
+            Console.WriteLine();
+
             string newSettings = ParseSettingsFastJSON(res);
             //string newSettings = ParseSettingsJSONNet(res);
+
+            Console.WriteLine("After:");
+            Console.WriteLine(newSettings);
+            Console.WriteLine();
+
             string response = SetSettings(url, newSettings);
 
+            Console.WriteLine("POST Response:");
+            Console.WriteLine(response);
+            Console.WriteLine();
+
+            response = GetSettingsGzip(url);
+
+            Console.WriteLine("New Settings:");
             Console.WriteLine(response);
         }
     }

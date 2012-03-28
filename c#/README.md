@@ -73,6 +73,21 @@ The call to `req.GetResponse()` blocks until the server responds. Once the respo
 
 Once all of the data is received, we just pass this back.
 
+#### GetSettingsGzip ####
+
+This is the same as GetSettings, except it sends the additional `Accept-Encoding` header letting the server know that we prefer gzipped data:
+
+    req.Headers.Add(HttpRequestHeader.AcceptEncoding, "gzip;q=1.0");
+
+Then, if the `Content-Encoding` header is set to gzip, we create an instance of  [`GZipStream`](http://msdn.microsoft.com/en-us/library/system.io.compression.gzipstream.aspx) (from `System.IO.Compression`). Since it is a `Stream`, we just replace our local variable that stores the response stream with it:
+
+    Stream resStream = res.GetResponseStream();
+    if (res.ContentEncoding.Equals("gzip", StringComparison.CurrentCultureIgnoreCase)) {
+        resStream = new GZipStream(resStream, CompressionMode.Decompress);
+    }
+
+That's it! We can leave the other code the same. If it's not gzipped, it will be handled as before.
+
 #### SetSettings ####
 
 Sending the settings up to the server is quite similar, but we'll need to set more things on the request. In this example, `settings` is the result from `GetSettings`.
