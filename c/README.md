@@ -2,8 +2,8 @@ The example C code is located in a [Git repository here]().
 
 This example uses the following dependencies:
 
-> [json-c](http://oss.metaparadigm.com/json-c/): json parsing library for C
-> [libcurl](http://curl.haxx.se/libcurl/): library for making HTTP calls
+  * [json-c](http://oss.metaparadigm.com/json-c/): json parsing library for C
+  * [libcurl](http://curl.haxx.se/libcurl/): library for making HTTP calls
 
 This example will:
 
