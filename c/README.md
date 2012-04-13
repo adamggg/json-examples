@@ -36,7 +36,10 @@ There are some prerequisits:
 
     git clone git@github.com:SpotterRF/json-examples.git
     cd json-examples/c/
-    cmake .
+    rm -rf ./build
+    mkdir -p ./build
+    cd ./build
+    cmake ..
     make
     ./example 192.168.254.254 # ip or hostname of spotter
 
