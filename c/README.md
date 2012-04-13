@@ -1,3 +1,11 @@
+The example C code is located in a [Git repository here](https://github.com/SpotterRF/json-examples/tree/master/c).
+
+This example will:
+
+1. Get the `/geolocation.json` resource from a Spotter
+2. Grab the 'altitude' value and do some simple modifications to it
+3. Post the changed JSON data back to the Spotter
+
 ### Running the Example JSON Code
 
 There are some prerequisits:
@@ -31,14 +39,6 @@ There are some prerequisits:
     cmake .
     make
     ./example
-
-The example C code is located in a [Git repository here](https://github.com/SpotterRF/json-examples/tree/master/c).
-
-This example will:
-
-1. Get the `/geolocation.json` resource from a Spotter
-2. Grab the 'altitude' value and do some simple modifications to it
-3. Post the changed JSON data back to the Spotter
 
 ### Example Code Walkthrough ###
 
