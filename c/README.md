@@ -38,7 +38,7 @@ There are some prerequisits:
     cd json-examples/c/
     cmake .
     make
-    ./example
+    ./example 192.168.254.254 # ip or hostname of spotter
 
 ### Example Code Walkthrough ###
 
