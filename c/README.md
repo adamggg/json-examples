@@ -1,9 +1,42 @@
-The example C code is located in a [Git repository here]().
+Running the Example Code
+===
 
-This example uses the following dependencies:
+There are some prerequisits:
 
   * [json-c](http://oss.metaparadigm.com/json-c/): json parsing library for C
   * [libcurl](http://curl.haxx.se/libcurl/): library for making HTTP calls
+
+
+libcurl
+---
+
+    sudo aptitude install libcurl-dev # or possibly libcurl4-openssl-dev
+    
+    # or
+    # sudo yum install libcurl-devel
+    # or
+    # follow the instructions on <http://curl.haxx.se>
+
+json-c
+---
+
+    wget http://oss.metaparadigm.com/json-c/json-c-0.9.tar.gz
+    tar xvf json-c-0.9.tar.gz
+    cd json-c-0.9
+    ./configure
+    make
+    sudo make install
+
+the main event
+---
+
+    git clone git@github.com:SpotterRF/json-examples.git
+    cd json-examples/c/
+    cmake .
+    make
+    ./example
+
+The example C code is located in a [Git repository here](https://github.com/SpotterRF/json-examples/tree/master/c).
 
 This example will:
 
