@@ -1,5 +1,4 @@
-Running the Example Code
-===
+### Running the Example JSON Code
 
 There are some prerequisits:
 
@@ -7,8 +6,7 @@ There are some prerequisits:
   * [libcurl](http://curl.haxx.se/libcurl/): library for making HTTP calls
 
 
-libcurl
----
+#### libcurl
 
     sudo aptitude install libcurl-dev # or possibly libcurl4-openssl-dev
     
@@ -17,8 +15,7 @@ libcurl
     # or
     # follow the instructions on <http://curl.haxx.se>
 
-json-c
----
+#### json-c
 
     wget http://oss.metaparadigm.com/json-c/json-c-0.9.tar.gz
     tar xvf json-c-0.9.tar.gz
@@ -27,8 +24,7 @@ json-c
     make
     sudo make install
 
-the main event
----
+#### the main event
 
     git clone git@github.com:SpotterRF/json-examples.git
     cd json-examples/c/
