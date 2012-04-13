@@ -10,18 +10,18 @@ This example will:
 
 There are some prerequisits:
 
-  * [json-c](http://oss.metaparadigm.com/json-c/): json parsing library for C
-  * [libcurl](http://curl.haxx.se/libcurl/): library for making HTTP calls
-
+  * [json-c](http://oss.metaparadigm.com/json-c/) (v0.9): json parsing library for C
+  * [libcurl](http://curl.haxx.se/libcurl/) (v7): library for making HTTP calls
 
 #### libcurl
 
-    sudo aptitude install libcurl-dev # or possibly libcurl4-openssl-dev
-    
-    # or
-    # sudo yum install libcurl-devel
-    # or
-    # follow the instructions on <http://curl.haxx.se>
+    wget http://curl.haxx.se/download/curl-7.25.0.tar.gz
+    tar xvf curl-7.25.0.tar.gz
+    cd curl-7.25.0
+    ./configure
+    make
+    sudo make install
+    sudo ldconfig
 
 #### json-c
 
@@ -31,6 +31,7 @@ There are some prerequisits:
     ./configure
     make
     sudo make install
+    sudo ldconfig
 
 #### the main event
 
