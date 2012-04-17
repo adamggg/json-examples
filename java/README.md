@@ -1,30 +1,47 @@
-The Java example code is located in a [Git repository here]().
+There are two *different* examples here. The first uses `json-lib` (the "standard" JSON library), the second uses `google-gson` (simpler, developed by Google, **probably what you you want**). The code is [on Github](https://github.com/SpotterRF/json-examples/tree/master/java).
 
-This example uses the following dependencies:
-
-> [json-lib](http://json-lib.sourceforge.net/)- has other dependencies; check the project page
-> 
-> [google-gson](http://code.google.com/p/google-gson/)
-
-**Installation**
+### Running the Example JSON Code
 
 This example depends on the required jars being in `./lib`. Necessary dependencies are:
 
-- commons-beanutils-1.8.x: JSON-Lib
-- commons-collections-3.2.x: JSON-Lib
-- commons-lang-2.5+: JSON-Lib
-- commons-logging-1.1.1: JSON-Lib
-- ezmorph-1.0.6: JSON-Lib
-- json-lib-2.4-jdk15.jar: JSON-Lib
-- gson-2.1.jar: Google GSON
+  - JSON-Lib ([Project Page](http://json-lib.sourceforge.net/))
+    - [commons-beanutils-1.8.x](http://mirrors.axint.net/apache//commons/beanutils/binaries/commons-beanutils-1.8.3-bin.tar.gz)
+    - [commons-collections-3.2.x](http://apache.mirrors.pelicantech.com//commons/collections/binaries/commons-collections-3.2.1-bin.tar.gz)
+    - [commons-lang-2.5+](http://apache.mirrors.pair.com//commons/lang/binaries/commons-lang3-3.1-bin.tar.gz)
+    - [commons-logging-1.1.1](http://apache.mirrors.pair.com//commons/logging/binaries/commons-logging-1.1.1-bin.tar.gz)
+    - [ezmorph-1.0.6](http://sourceforge.net/settings/mirror_choices?projectname=ezmorph&filename=ezmorph/ezmorph-1.0.6/ezmorph-1.0.6.jar)
+    - [json-lib-2.4-jdk15.jar](http://sourceforge.net/settings/mirror_choices?projectname=json-lib&filename=json-lib/json-lib-2.4/json-lib-2.4-jdk15.jar)
 
-There are examples for both libraries, so only one is necessary. I'd recommend gson, since it's supported by Google and its only dependency is itself.
+  - Google GSON ([Project Page](http://code.google.com/p/google-gson/)) (**best**)
+    - gson-2.1.jar
 
-**Running the Example**
+#### Gotta download and unpack 'em all:
 
-Since java doesn't compile the libraries into a single file, we'll have to include them in our classpath at runtime:
+    mkdir lib
+    pushd lib
+    wget \
+      'http://mirrors.axint.net/apache//commons/beanutils/binaries/commons-beanutils-1.8.3-bin.tar.gz' \
+      'http://apache.mirrors.pelicantech.com//commons/collections/binaries/commons-collections-3.2.1-bin.tar.gz' \
+      'http://apache.mirrors.pair.com//commons/lang/binaries/commons-lang3-3.1-bin.tar.gz' \
+      'http://apache.mirrors.pair.com//commons/logging/binaries/commons-logging-1.1.1-bin.tar.gz' \
+      'http://iweb.dl.sourceforge.net/project/ezmorph/ezmorph/ezmorph-1.0.6/ezmorph-1.0.6.jar' \
+      'http://iweb.dl.sourceforge.net/project/json-lib/json-lib/json-lib-2.4/json-lib-2.4-jdk15.jar' \
+      'http://google-gson.googlecode.com/files/google-gson-2.1-release.zip' \
 
-    java -cp .:lib/* example <url to Spotter>
+    mv *ezmorph-1.0.6.jar ezmorph-1.0.6.jar
+    mv *json-lib-2.4-jdk15.jar json-lib-2.4-jdk15.jar
+
+    ls | grep tar | while read F; do tar xf $F; done
+    ls | grep zip | while read F; do unzip $F; done
+
+    mv ./*/*.jar ./
+    popd
+
+#### Compile and Run
+
+    cmake .
+    make
+    java -cp .:lib/* example 192.168.254.254 # ip of sensor
 
 ### Code Walkthrough ###
 
