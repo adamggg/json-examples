@@ -35,7 +35,7 @@ There are some prerequisits:
 
 #### the main event
 
-    git clone git@github.com:SpotterRF/json-examples.git
+    git clone git://github.com/SpotterRF/json-examples.git
     cd json-examples/c/
     rm -rf ./build
     mkdir -p ./build
