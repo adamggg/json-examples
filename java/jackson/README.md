@@ -127,3 +127,8 @@ And then you build like so
 
     make
     make test
+
+More Details
+===
+
+Jackson supports a lot of cool features, to learn more check out the documentation on the github page (a bit easier to read): <https://github.com/FasterXML/jackson-databind>
