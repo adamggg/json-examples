@@ -1,9 +1,9 @@
 
-package com.acme.api;
+package com.acme.datatypes;
 
 import java.util.List;
 
-public class Person{
+public class User{
    	private String gender;
    	private Name name;
    	private String userImage;

@@ -1,5 +1,5 @@
 
-package com.acme.api;
+package com.acme.datatypes;
 
 import java.util.List;
 
