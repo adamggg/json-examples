@@ -59,7 +59,7 @@ Since JSON only supports arrays, maps, numbers, booleans, and strings there is n
 Create a 'class' from the JSON object (no schema required!)
 ---
 
-Now we're going to create a Bean, which is known in other languages as a Value Object or Struct.
+Now we're going to create a [Bean](http://en.wikipedia.org/wiki/JavaBeans#JavaBean_Example), which is known in other languages as a Value Object or Struct.
 
 Since the types of JSON properties are well defined by the minimalistic syntax, no schema is required. 
     
@@ -96,7 +96,7 @@ Create the file `com/acme/datatypes/UserTest.java`
 
 Create the file `user.json` with the contents of the original example if you wish to use `new File("user.json")` rather than the url.
 
-WARNING: There are a few bugs in `JSONGen`. In particular `boolean` getters are generated as `getFoo` rather than `isFoo` (as per Java Bean spec). I've contacted the author and hope to hear back about the update soon. Also, if you're transmitting binary data over JSON (probably a bad idea), you'll need to manually edit the type to be `byte[]`.
+WARNING: There are a few bugs in `JSONGen`. In particular `boolean` getters are generated as `getFoo` rather than `isFoo` (as per [Java Bean](http://en.wikipedia.org/wiki/JavaBeans#JavaBean_Example). I've contacted the author and hope to hear back about the update soon. Also, if you're transmitting binary data over JSON (probably a bad idea), you'll need to manually edit the type to be `byte[]`.
 
 Compile and Run
 ---
