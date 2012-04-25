@@ -78,13 +78,19 @@ Create your project directory
     mkdir -p json-java-example/{src,lib}
     cd json-java-example
 
-Get the Jackson jars
+Get the Jackson jars <http://repo1.maven.org/maven2/com/fasterxml/jackson/>
 
     pushd lib
-    curl 'http://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-databind/2.0.1/jackson-databind-2.0.1.jar' -o jackson-databind-2.0.1.jar
     curl 'http://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-core/2.0.1/jackson-core-2.0.1.jar' -o jackson-core-2.0.1.jar
+    curl 'http://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-databind/2.0.1/jackson-databind-2.0.1.jar' -o jackson-databind-2.0.1.jar
     curl 'http://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-annotations/2.0.1/jackson-annotations-2.0.1.jar' -o jackson-annotations-2.0.1.jar
     popd
+
+or download from your browser
+
+  * [jackson-core-2.0.1.jar](http://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-core/2.0.1/jackson-core-2.0.1.jar)
+  * [jackson-databind-2.0.1.jar](http://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-databind/2.0.1/jackson-databind-2.0.1.jar)
+  * [jackson-annotations-2.0.1.jar](http://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-annotations/2.0.1/jackson-annotations-2.0.1.jar)
 
 Assuming that your `User.zip` was downloaded to `~/Downloads`
 
@@ -92,7 +98,7 @@ Assuming that your `User.zip` was downloaded to `~/Downloads`
     unzip ~/Downloads/User.zip
     popd
 
-Create the file `com/acme/datatypes/UserTest.java`
+Create the file [`com/acme/datatypes/UserTest.java`](https://raw.github.com/SpotterRF/json-examples/master/java/jackson/src/com/acme/datatypes/UserTest.java) (links to copy/pasteable code)
 
 Create the file `user.json` with the contents of the original example if you wish to use `new File("user.json")` rather than the url.
 
