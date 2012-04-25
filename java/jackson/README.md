@@ -98,7 +98,7 @@ Assuming that your `User.zip` was downloaded to `~/Downloads`
     unzip ~/Downloads/User.zip
     popd
 
-Create the file `com/acme/datatypes/UserTest.java`
+Create the file [`com/acme/datatypes/UserTest.java`](https://raw.github.com/SpotterRF/json-examples/master/java/jackson/src/com/acme/datatypes/UserTest.java) (links to copy/pasteable code)
 
 Create the file `user.json` with the contents of the original example if you wish to use `new File("user.json")` rather than the url.
 
