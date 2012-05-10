@@ -33,10 +33,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="Newtonsoft.Json">
-      <HintPath>Json40r6\Source\Src\Newtonsoft.Json\bin\Debug\Net\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="fastJSON">
-      <HintPath>fastJSON v1.9.6\fastJSON\bin\Debug\fastJSON.dll</HintPath>
+      <HintPath>Json45r5\Bin\Net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

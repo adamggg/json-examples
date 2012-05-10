@@ -6,7 +6,6 @@ using System.IO.Compression;
 using System.Net;
 using System.Text;
 
-//using Newtonsoft.Json.Linq;
 using fastJSON;
 
 namespace example {
@@ -103,27 +102,6 @@ namespace example {
             return JSON.Instance.ToJSON(result);
         }
 
-/*
-        static string ParseSettingsJSONNet(string settings) {
-            JObject obj = JObject.Parse(settings);
-            // get the result object
-            JToken result = obj["result"];
-
-            float alt = result["altitude"].Value<float>();
-
-            if (alt > 2000) {
-                alt = 747;
-            } else {
-                alt += 1000;
-            }
-
-            // modify the altitude with our new value
-            result["altitude"] = alt;
-
-            return result.ToString();
-        }
-*/
-
         static void Main(string[] args) {
             if (args.Length != 1) {
                 Console.WriteLine("Usage: example.exe <url>");
@@ -147,7 +125,6 @@ namespace example {
             Console.WriteLine();
 
             string newSettings = ParseSettingsFastJSON(res);
-            //string newSettings = ParseSettingsJSONNet(res);
 
             Console.WriteLine("After:");
             Console.WriteLine(newSettings);
