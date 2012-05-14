@@ -69,6 +69,15 @@ Since the types of JSON properties are well defined by the minimalistic syntax, 
   4. Enter `User` as `Object Class Name`
   5. Click `Generate` to download your Java classes in a zip file (`User.zip`)
 
+**WARNING**: You should annotate these classes so that future additions to the JSON don't break your code.
+
+    import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+    @JsonIgnoreProperties(ignoreUnknown=true)
+    public class User {
+      ...
+    }
+
 Create a test application
 ---
 
@@ -99,6 +108,9 @@ Assuming that your `User.zip` was downloaded to `~/Downloads`
     popd
 
 Create the file [`com/acme/datatypes/UserTest.java`](https://raw.github.com/SpotterRF/json-examples/master/java/jackson/src/com/acme/datatypes/UserTest.java) (links to copy/pasteable code)
+
+**WARNING**: If you fail to call `mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);`
+otherwise backwards-compatible additions to the JSON will break your code.
 
 Create the file `user.json` with the contents of the original example if you wish to use `new File("user.json")` rather than the url.
 

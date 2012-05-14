@@ -6,6 +6,7 @@ import com.acme.datatypes.User;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 
 import java.io.File;
 import java.net.URL;
@@ -20,6 +21,10 @@ public class UserTest {
     User user = null;
 
     ObjectMapper mapper = new ObjectMapper(); // can reuse, share globally
+
+    // IMPORTANT
+    // without this option set adding new fields breaks old code
+    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
     user = mapper.readValue(jsonFile, User.class);
     System.out.println(user.getName().getFirst());
