@@ -291,26 +291,26 @@ void processTrack (char* data) {
         timestamp = json_object_object_get(currentTrack, "timestamp");
 
         printf("\nTrack\n");
-        printf("    id: %s\n", json_object_get_string(id));
+        printf("    id: %d\n", json_object_get_int(id));
         printf("    geolocation:\n");
-        printf("        latitude: %s\n", json_object_get_string(latitude));
-        printf("        longitude: %s\n", json_object_get_string(longitude));
-        printf("        altitude: %s\n", json_object_get_string(altitude));
-        printf("        accuracy: %s\n", json_object_get_string(accuracy));
-        printf("        altitudeAccuracy: %s\n", json_object_get_string(altitudeAccuracy));
-        printf("        bearing: %s\n", json_object_get_string(bearing));
-        printf("        heading: %s\n", json_object_get_string(heading));
-        printf("        speed: %s\n", json_object_get_string(speed));
+        printf("        latitude: %f\n", json_object_get_double(latitude));
+        printf("        longitude: %f\n", json_object_get_double(longitude));
+        printf("        altitude: %f\n", json_object_get_double(altitude));
+        printf("        accuracy: %f\n", json_object_get_double(accuracy));
+        printf("        altitudeAccuracy: %f\n", json_object_get_double(altitudeAccuracy));
+        printf("        bearing: %f\n", json_object_get_double(bearing));
+        printf("        heading: %f\n", json_object_get_double(heading));
+        printf("        speed: %f\n", json_object_get_double(speed));
         printf("    observation:\n");
-        printf("        range: %s\n", json_object_get_string(range));
-        printf("        radialVelocity: %s\n", json_object_get_string(radialVelocity));
-        printf("        horizontalAngle: %s\n", json_object_get_string(horizontalAngle));
-        printf("        azimuthAngle: %s\n", json_object_get_string(azimuthAngle));
-        printf("        verticalAngle: %s\n", json_object_get_string(verticalAngle));
-        printf("        altitudeAngle: %s\n", json_object_get_string(altitudeAngle));
+        printf("        range: %f\n", json_object_get_double(range));
+        printf("        radialVelocity: %f\n", json_object_get_double(radialVelocity));
+        printf("        horizontalAngle: %f\n", json_object_get_double(horizontalAngle));
+        printf("        azimuthAngle: %f\n", json_object_get_double(azimuthAngle));
+        printf("        verticalAngle: %f\n", json_object_get_double(verticalAngle));
+        printf("        altitudeAngle: %f\n", json_object_get_double(altitudeAngle));
         printf("    stats:\n");
-        printf("        rcs: %s\n", json_object_get_string(rcs));
-        printf("    timestamp: %s\n", json_object_get_string(timestamp));
+        printf("        rcs: %f\n", json_object_get_double(rcs));
+        printf("    timestamp: %d\n", json_object_get_int(timestamp));
     }
 }
 
