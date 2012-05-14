@@ -12,6 +12,7 @@ There are some prerequisits:
 
   * [json-c](http://oss.metaparadigm.com/json-c/) (v0.9): json parsing library for C
   * [libcurl](http://curl.haxx.se/libcurl/) (v7): library for making HTTP calls
+  * [cmake](http://www.cmake.org/) (v2.8): makefile generator for C
 
 #### libcurl
 
@@ -32,6 +33,15 @@ There are some prerequisits:
     make
     sudo make install
     sudo ldconfig
+
+#### cmake
+
+    wget http://www.cmake.org/files/v2.8/cmake-2.8.7.tar.gz
+    tar xvzf cmake-2.8.7.tar.gz
+    cd cmake-2.8.7
+    ./configure
+    make
+    sudo make install
 
 #### the main event
 
@@ -202,3 +212,205 @@ Finally, perform the request and clean up after ourselves:
     curl_easy_cleanup(pCurl);
     curl_slist_free_all(headers);
 
+### Iterating Over Track Object ###
+
+The previous code examples demonstrated how to get and post settings using
+libcurl, and specifically how to modify the altitude from the geolocation.json
+resource. This example shows how to iterate over a more complicated json object
+-- a track. The important functions from example.c are `setTrackUrl` and
+`processTrack`.
+
+#### setTrackUrl ####
+
+This function sets the url for curl to get track information. The first
+parameter to the function is an output variable that will point to the url and
+the second is a pointer to the hostname or IP address of the spotter.
+
+    #define TRACKS "/tracks.json"
+
+    void setTrackUrl (char* url, char* host) {
+        int urlLength = 0;
+
+        // copy the host first
+        strcpy(url, host);
+
+        urlLength = strlen(url);
+        // remove the trailing /
+        if (url[urlLength - 1] == '/') {
+            url[urlLength - 1] = '\0';
+            urlLength--;
+        }
+
+        // add the resource to the end of the URL
+        strcpy(&url[urlLength], TRACKS);
+    }
+
+This function generates the url necessary for the curl call and stores it in
+`url`. For example, if the IP address of the Spotter were 192.168.24.107, then
+`url` would be `192.168.24.107/tracks.json`.
+
+Using this function is simple. Here is how it is used in context with the
+`getSettings` functions (defined earlier) and the `processTrack` function, which
+will be explained next:
+
+    int main(int argc, char** argv) {
+        int res;
+
+        // should be big enough for most things
+        // more flexibility should be added for a real application
+        char trackUrl[256];
+        char trackData[2048];
+
+        // clear our memory
+        memset(trackUrl, 0, sizeof(trackUrl));
+        memset(trackData, 0, sizeof(trackData));
+
+        // set the url to get track information
+        // the hostname/ip is the second command line parameter
+        setTrackUrl(trackUrl, argv[1]);
+
+        // get the current track information
+        res = getSettings(trackUrl, trackData);
+
+        // iterate over all tracks
+        processTrack(trackData);
+
+        return res;
+    }
+
+
+
+#### processTrack ####
+
+In this function, we actually iterate over all the track data. Since the track
+object has a relatively large number of fields, here is an example json object
+for reference:
+
+    {
+        "id": 560
+      , "geolocation": {
+            "latitude": 40.33057
+          , "longitude": -111.678521
+          , "altitude": 1475.5
+          , "accuracy": null
+          , "altitudeAccuracy": null
+          , "bearing": null
+          , "heading": 284.114807
+          , "speed": 5.872576
+        }
+      , "observation": {
+            "range": 516.981402
+          , "radialVelocity": 12.678081
+          , "horizontalAngle": -0.794151
+          , "azimuthAngle": 358.206726
+          , "verticalAngle": null
+          , "altitudeAngle": null
+        }
+      , "stats": {
+            "rcs": 0.745098
+        }
+      , "timestamp": 1336839367666
+    }
+
+For more details regarding the track information, please see contact us and ask about our API.
+
+As in previous examples, we first use the `json_tokener_parse` function to parse
+the track data into a json structure:
+
+
+    void processTrack (char* data) {
+        struct json_object* settingsJson;
+
+        // parse the track data into json structure
+        settingsJson = json_tokener_parse(data);
+
+        ...
+    }
+
+Next, we pull out the `result` array from the json structure we just created:
+
+    struct json_object* results;
+
+    results = json_object_object_get(settingsJson, "result");
+
+Please note that even though `result` is an array, we still access it with the
+function `json_object_object_get`.
+
+Then we find out what the length of the `result` array is using
+`json_object_array_length` so that we can iterate over each track:
+
+    int length = 0;
+    int i = 0;
+
+    // grab the length of the array (number of tracks)
+    length = json_object_array_length(results);
+
+    for (i = 0; i < length; i++) {
+      // process each track here
+    }
+
+Within the for loop, we now can access each track object using the index `i` and
+the function `json_object_array_get_idx`:
+
+    struct json_object* currentTrack;
+
+    currentTrack = json_object_array_get_idx(results, i);
+
+Using `currentTrack` we can access all child objects:
+
+    // id member
+    struct json_object* id = json_object_object_get(currentTrack, "id");
+
+    // get geolocation data
+    struct json_object* geolocation = json_object_object_get(currentTrack, "geolocation");
+    struct json_object* latitude = json_object_object_get(geolocation, "latitude");
+    struct json_object* longitude = json_object_object_get(geolocation, "longitude");
+    struct json_object* altitude = json_object_object_get(geolocation, "altitude");
+    struct json_object* accuracy = json_object_object_get(geolocation, "accuracy");
+    struct json_object* altitudeAccuracy = json_object_object_get(geolocation, "altitudeAccuracy");
+    struct json_object* bearing = json_object_object_get(geolocation, "bearing");
+    struct json_object* heading = json_object_object_get(geolocation, "heading");
+    struct json_object* speed = json_object_object_get(geolocation, "speed");
+
+    // get observation data
+    struct json_object* observation = json_object_object_get(currentTrack, "observation");
+    struct json_object* range = json_object_object_get(observation, "range");
+    struct json_object* radialVelocity = json_object_object_get(observation, "radialVelocity");
+    struct json_object* horizontalAngle = json_object_object_get(observation, "horizontalAngle");
+    struct json_object* azimuthAngle = json_object_object_get(observation, "azimuthAngle");
+    struct json_object* verticalAngle = json_object_object_get(observation, "verticalAngle");
+    struct json_object* altitudeAngle = json_object_object_get(observation, "altitudeAngle");
+
+    // get stats data
+    struct json_object* stats = json_object_object_get(currentTrack, "stats");
+    struct json_object* rcs = json_object_object_get(stats, "rcs");
+
+    // timestamp member
+    struct json_object* timestamp = json_object_object_get(currentTrack, "timestamp");
+
+And print them to the screen, if we desire:
+
+    printf("\nTrack\n");
+    printf("    id: %d\n", json_object_get_int(id));
+    printf("    geolocation:\n");
+    printf("        latitude: %f\n", json_object_get_double(latitude));
+    printf("        longitude: %f\n", json_object_get_double(longitude));
+    printf("        altitude: %f\n", json_object_get_double(altitude));
+    printf("        accuracy: %f\n", json_object_get_double(accuracy));
+    printf("        altitudeAccuracy: %f\n", json_object_get_double(altitudeAccuracy));
+    printf("        bearing: %f\n", json_object_get_double(bearing));
+    printf("        heading: %f\n", json_object_get_double(heading));
+    printf("        speed: %f\n", json_object_get_double(speed));
+    printf("    observation:\n");
+    printf("        range: %f\n", json_object_get_double(range));
+    printf("        radialVelocity: %f\n", json_object_get_double(radialVelocity));
+    printf("        horizontalAngle: %f\n", json_object_get_double(horizontalAngle));
+    printf("        azimuthAngle: %f\n", json_object_get_double(azimuthAngle));
+    printf("        verticalAngle: %f\n", json_object_get_double(verticalAngle));
+    printf("        altitudeAngle: %f\n", json_object_get_double(altitudeAngle));
+    printf("    stats:\n");
+    printf("        rcs: %f\n", json_object_get_double(rcs));
+    printf("    timestamp: %d\n", json_object_get_int(timestamp));
+
+Note that to convert the JSON structure to its appropriate data type, use either
+the function `json_object_get_int` or `json_object_get_double`. 
