@@ -312,8 +312,7 @@ for reference:
       , "timestamp": 1336839367666
     }
 
-For more details regarding the track information, please see our
-[API documentation](http://dev.spotterrf.com/docs/latest/#tracks_json).
+For more details regarding the track information, please see contact us and ask about our API.
 
 As in previous examples, we first use the `json_tokener_parse` function to parse
 the track data into a json structure:
