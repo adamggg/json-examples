@@ -11,7 +11,7 @@ This depends on the project files being at:
 
     wget 'http://download.codeplex.com/Download?ProjectName=json&DownloadId=376473&FileTime=129809414388100000&Build=18857' \
       -O Json45r5.zip
-    unzip Json45r5.zip -d Json45r5.zip
+    unzip Json45r5.zip -d Json45r5
 
     pushd Json45r5/Source/Src/Newtonsoft.Json/
     xbuild Newtonsoft.Json.csproj 
