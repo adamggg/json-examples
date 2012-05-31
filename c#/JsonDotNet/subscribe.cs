@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
 
-namespace example {
+namespace SubscriptionExample {
     
     public class SubscriptionHost {
         public string Host;
@@ -45,61 +45,38 @@ namespace example {
     }
     
     public class Subscription {
-        
+        // TODO
     }
     
-    class Example {
-        private const string RESOURCE = "/geolocation.json";
-
-        static string GetSettings(string url) {
-            // add the resource we're looking for
-            url += RESOURCE;
-
-            StringBuilder sb = new StringBuilder();
-            byte[] buf = new byte[8192];
-
-            // initialize the request
-            HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url + "?minWait=1000");
-
-            HttpWebResponse res = (HttpWebResponse)req.GetResponse();
-
-            Stream resStream = res.GetResponseStream();
-
-            int count = 0;
-            while ((count = resStream.Read(buf, 0, buf.Length)) > 0) {
-                sb.Append(Encoding.UTF8.GetString(buf, 0, count));
-            }
-
-            return sb.ToString();
-        }
-
-        static string GetSettingsGzip(string url) {
-            // add the resource we're looking for
-            url += RESOURCE;
-
-            StringBuilder sb = new StringBuilder();
-            byte[] buf = new byte[8192];
-
-            // initialize the request
-            HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url + "?minWait=1000");
-            req.Headers.Add(HttpRequestHeader.AcceptEncoding, "gzip;q=1.0");
-
-            HttpWebResponse res = (HttpWebResponse)req.GetResponse();
-
-            Stream resStream = res.GetResponseStream();
-            if (res.ContentEncoding.Equals("gzip", StringComparison.CurrentCultureIgnoreCase)) {
-                resStream = new GZipStream(resStream, CompressionMode.Decompress);
-            }
-
-            int count = 0;
-            while ((count = resStream.Read(buf, 0, buf.Length)) > 0) {
-                sb.Append(Encoding.UTF8.GetString(buf, 0, count));
-            }
-            return sb.ToString();
-        }
+    class SubscriptionMain {
         
+        // The data that goes across the wire will look something like this
+        /*
+          POST /geolocation.json/subscriptions HTTP/1.1
+          Host: 192.168.254.254:8088 
+          Content-Type: application/json 
+          Content-Length: 288 
+          Connection: keep-alive 
+
+          {
+            "params": {
+              "foo": "module",
+              "bar": "specific",
+              "baz": "properties"
+            },
+            "protocol": "http:",
+            "hostname": "192.168.254.100",
+            "pathname": "/geolocation.json?this_is_sent_to_your_listener",
+            "port": "4444",
+            "filter": {
+              "minWait": 1000,
+              "maxWait": 1000
+            }
+          }
+        */
         static Subscription Subscribe(SubscriptionHost sensor, SubscriptionTarget target) {
             string json;
+            string url;
             byte[] postBody;
             StringBuilder sb = new StringBuilder();
             byte[] buf = new byte[8192];
@@ -110,10 +87,10 @@ namespace example {
             int responseByteCount;
             
             /*
-             * Format the Request POST Body
+             * Format the Request POST Body, which contains information about the target
              */
             target.Params = new JObject(
-                    new JProperty("foo", "module")
+                     new JProperty("foo", "module")
                 ,    new JProperty("bar", "specific")
                 ,    new JProperty("baz", "properties")
             );
@@ -123,32 +100,35 @@ namespace example {
             if ("http:" == target.Protocol.ToLower()) {
               target.Pathname = sensor.Pathname + "?this_is_sent_to_your_listener";
             }
-
             json = JsonConvert.SerializeObject(
                     target
                 ,    Formatting.Indented
                     // use normal JSON lowerCamelCase names instead of C# UpperCamelCase
                 ,    new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() }
             );
-            
-            postBody = System.Text.Encoding.UTF8.GetBytes(json);
-            
+
             /*
              * Create the Request
              */
-            req = (HttpWebRequest)WebRequest.Create("http://" + sensor.Host + sensor.Pathname + "/subscriptions");
+            // Form URL and POST Body
+            url = "http://" + sensor.Host + sensor.Pathname + "/subscriptions";
+            postBody = System.Text.Encoding.UTF8.GetBytes(json);
+            // Form Request and Headers
+            Console.WriteLine(url);
+            req = (HttpWebRequest)WebRequest.Create(url);
             req.Method = "POST";
             req.ContentType = "application/json";
             req.ContentLength = postBody.Length;
+            // Send the Body (headers are sent automatically at start of write)
+            Console.WriteLine(postBody);
             postBodyWriteStream = req.GetRequestStream();
             postBodyWriteStream.Write(postBody, 0, postBody.Length);
-            
+
             /*
              * Handle the Response
              */
             res = (HttpWebResponse)req.GetResponse();
             resStream = res.GetResponseStream();
-
             responseByteCount = 0;
             while ((responseByteCount = resStream.Read(buf, 0, buf.Length)) > 0) {
                 sb.Append(Encoding.UTF8.GetString(buf, 0, responseByteCount));
@@ -160,6 +140,7 @@ namespace example {
         }
         
         static void Unsubscribe(SubscriptionHost sensor, Subscription subscription) {
+          // TODO
         }
 
         static string ParseSettingsJSONNet(string settings) {
@@ -184,7 +165,7 @@ namespace example {
         static void Main(string[] args) {
             if (args.Length != 5) {
                 Console.WriteLine("Usage: subscription.exe <sensor-host> <sensor-resource> <target-proto> <target-hostname> <target-port>");
-                Console.WriteLine("Usage: subscription.exe 192.168.254.254:80 datetime http 192.168.254.100 4444");
+                Console.WriteLine("Usage: subscription.exe 192.168.254.254:80 /geolocation.json http 192.168.254.100 4444");
                 return;
             }
             
@@ -199,31 +180,37 @@ namespace example {
             target.Hostname = args[3];
             target.Port = args[4];
 
-            // normalize the protocol... because the standard is stupid and expects a trailing ":"
+            /*
+             * Adjusting the user's commandline input for SubscriptionTarget
+             */
             if (!target.Protocol.EndsWith(":")) {
+                // normalize the protocol... because the standard is stupid and expects a trailing ":"
                 target.Protocol = target.Protocol + ":";
             }
 
-            // any use of http is superfluous
+            /*
+             * Adjusting the user's commandline input for SubscriptionHost
+             */
             if (sensor.Host.StartsWith("http://")) {
+                // any use of http is superfluous
                 sensor.Host = sensor.Host.Substring(0, "http://".Length - 1);
             }
-            
-            // remove trailing slash if present
             if (sensor.Host.EndsWith("/")) {
+                // remove trailing slash if present
                 sensor.Host = sensor.Host.Substring(0, sensor.Host.Length - 1);
             }
-
-
-            // add leading "/" if absent
             if (!sensor.Pathname.StartsWith("/")) {
+                // add leading "/" if absent
                 sensor.Pathname = "/" + sensor.Pathname;
             }
-            // add ".json" if no extension is present
             if (!sensor.Pathname.Contains(".")) {
+                // add ".json" if no extension is present
                 sensor.Pathname += ".json";
             }
-            
+
+            /*
+             * Now time for the heavy-lifting
+             */
             Console.WriteLine("Subscribing...");
             subscription = Subscribe(sensor, target);
             
