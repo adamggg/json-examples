@@ -7,8 +7,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{883388E8-E4CD-4938-8F26-E759BA9B52D8}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>example</RootNamespace>
-    <AssemblyName>example</AssemblyName>
+    <RootNamespace>poll</RootNamespace>
+    <AssemblyName>poll</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -37,7 +37,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="example.cs" />
+    <Compile Include="poll.cs" />
     <Compile Include="AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
