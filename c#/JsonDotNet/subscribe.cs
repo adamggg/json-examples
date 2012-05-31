@@ -22,13 +22,17 @@ namespace example {
         public class FilterStruct {
             public Int32 MinWait;
             public Int32 MaxWait;
-            public Int32 Since;
-            public Int32 Until;
+            // not sure how to get JSON.Net to set these
+            // to undefined or null rather than zero
+            //public Int32 Since;
+            //public Int32 Until;
         }
         
         public SubscriptionTarget() {
             Params = new JObject();
             Filter = new FilterStruct();
+            //Since = null;
+            //Until = null;
         }
         
         public JObject Params;
