@@ -8,8 +8,8 @@ using System.Text;
 
 using Newtonsoft.Json.Linq;
 
-namespace example {
-    class Example {
+namespace poll {
+    class Poll {
         private const string RESOURCE = "/geolocation.json";
 
         static string GetSettings(string url) {
