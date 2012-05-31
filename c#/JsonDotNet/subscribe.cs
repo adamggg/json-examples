@@ -114,13 +114,21 @@ namespace SubscriptionExample {
             url = "http://" + sensor.Host + sensor.Pathname + "/subscriptions";
             postBody = System.Text.Encoding.UTF8.GetBytes(json);
             // Form Request and Headers
-            Console.WriteLine(url);
+            Console.WriteLine("-------------");
+            Console.WriteLine("Sending to " + url + "...");
+            Console.WriteLine("-------------");
+            Console.WriteLine("POST " + target.Pathname + " HTTP/1.1");
+            Console.WriteLine("Host: " + sensor.Host);
+            Console.WriteLine("Content-Type: application/json");
+            Console.WriteLine("Content-Length: " + postBody.Length.ToString());
+            Console.WriteLine("");
             req = (HttpWebRequest)WebRequest.Create(url);
             req.Method = "POST";
             req.ContentType = "application/json";
             req.ContentLength = postBody.Length;
             // Send the Body (headers are sent automatically at start of write)
-            Console.WriteLine(postBody);
+            Console.WriteLine(json);
+            Console.WriteLine("-------------");
             postBodyWriteStream = req.GetRequestStream();
             postBodyWriteStream.Write(postBody, 0, postBody.Length);
 
@@ -135,7 +143,11 @@ namespace SubscriptionExample {
             }
 
             // just viewing the response for now...
+            Console.WriteLine("Getting response...");
+            Console.WriteLine("-------------");
             Console.WriteLine(sb);
+            Console.WriteLine("-------------");
+            Console.WriteLine();
             return new Subscription();
         }
         
@@ -211,7 +223,7 @@ namespace SubscriptionExample {
             /*
              * Now time for the heavy-lifting
              */
-            Console.WriteLine("Subscribing...");
+            //Console.WriteLine("Subscribing...");
             subscription = Subscribe(sensor, target);
             
             Console.WriteLine("Waiting 15 seconds (so you can inspect the subscription)...");
