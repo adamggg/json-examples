@@ -25,17 +25,17 @@ namespace SimpleHttpServer
 
         private HttpListener listener;
 
-        public HttpListenerClass()
+        public HttpListenerClass(string port)
         {
             ThreadPool.SetMaxThreads(50, 100);
             ThreadPool.SetMinThreads(50, 50);
             listener = new HttpListener();
-            listener.Prefixes.Add("http://*:8088/");
+            listener.Prefixes.Add("http://*:" + port + "/");
+            Console.WriteLine("Listening on http://0.0.0.0:" + port);
         }
 
         public void Start()
         {
-            Console.WriteLine("Called Start");
             listener.Start();
 
             while (keepAlive == true) {
@@ -56,7 +56,6 @@ namespace SimpleHttpServer
 
         public void Stop()
         {
-            Console.WriteLine("Called Stop");
             listener.Stop();
             keepAlive = false;
         }
@@ -170,8 +169,13 @@ namespace SimpleHttpServer
     {
         public static void Main (string[] args)
         {
-            Console.WriteLine("Hello World!");
-            HttpListenerClass HTTP = new HttpListenerClass();
+            string port = "8088";
+
+            if (args.Length >= 1) {
+              port = args[0];
+            }
+
+            HttpListenerClass HTTP = new HttpListenerClass(port);
             HTTP.Start();
             Console.WriteLine("Start has been started");
         }
