@@ -13,6 +13,11 @@ Under normal circumstances, these opposites don't attract.
 With the combined power of [JSONGen](http://jsongen.byingtondesign.com/) by [Rick Byington](http://byingtondesign.com)
 and [Jackson](http://wiki.fasterxml.com/JacksonInFiveMinutes) by [FasterXML](fasterxml.com)
 
+Watch the Tutorial on YouTube
+===
+
+There's a 10-minute tutorial of this documentation on YouTube at [youtu.be/vBkuLu-ycEc](http://youtu.be/vBkuLu-ycEc).
+
 Compile and Run the example code
 ===
 
